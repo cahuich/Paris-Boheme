@@ -1,0 +1,285 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import { ArrowRight, ChevronDown } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
+import { ArticleCard } from "@/components/ArticleCard";
+import { FeaturedArticle } from "@/components/FeaturedArticle";
+import { CategoryCard } from "@/components/CategoryCard";
+import {
+  ArticleCardSkeleton,
+  FeaturedSkeleton,
+  CategorySkeleton,
+} from "@/components/LoadingSkeleton";
+import { NewsletterForm } from "@/components/NewsletterForm";
+
+const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+
+export default function HomePage() {
+  const [featuredArticles, setFeaturedArticles] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [featuredRes, articlesRes, categoriesRes] = await Promise.all([
+          axios.get(`${API}/featured-articles`),
+          axios.get(`${API}/articles`),
+          axios.get(`${API}/categories`),
+        ]);
+        setFeaturedArticles(featuredRes.data);
+        setArticles(articlesRes.data);
+        setCategories(categoriesRes.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const scrollToContent = () => {
+    document.getElementById("featured-section")?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-[#FDFBF7]">
+      <Header />
+
+      {/* Hero Section */}
+      <section
+        data-testid="hero-section"
+        className="relative h-screen flex items-center justify-center overflow-hidden"
+      >
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80"
+            alt="París - Torre Eiffel"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#FDFBF7]" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <p className="text-[#C5A059] font-medium tracking-widest uppercase mb-4 animate-fade-in">
+            Explora la Ciudad de la Luz
+          </p>
+          <h1 className="font-['Playfair_Display'] text-5xl md:text-7xl font-bold text-white mb-6 animate-fade-in-up">
+            Descubre París
+          </h1>
+          <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto mb-8 animate-fade-in-up animation-delay-200">
+            Desde los monumentos emblemáticos hasta los barrios secretos,
+            sumérgete en la historia y la cultura de la ciudad más hermosa del
+            mundo.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-300">
+            <Link
+              to="/articles"
+              data-testid="hero-explore-btn"
+              className="btn-primary inline-flex items-center gap-2"
+            >
+              Explorar artículos
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <button
+          onClick={scrollToContent}
+          data-testid="scroll-indicator"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/80 hover:text-white transition-colors animate-bounce"
+        >
+          <ChevronDown className="w-8 h-8" />
+        </button>
+      </section>
+
+      {/* Featured Articles Section */}
+      <section
+        id="featured-section"
+        data-testid="featured-section"
+        className="py-16 md:py-24"
+      >
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="text-[#C5A059] font-medium tracking-widest uppercase mb-2">
+                Destacados
+              </p>
+              <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-semibold text-[#1A1A1A]">
+                Artículos Destacados
+              </h2>
+            </div>
+            <Link
+              to="/articles"
+              data-testid="view-all-featured"
+              className="hidden md:flex items-center gap-2 text-[#1A2B4C] hover:text-[#C5A059] font-medium transition-colors"
+            >
+              Ver todos los artículos
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {/* Featured Grid */}
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FeaturedSkeleton isLarge />
+              <div className="grid gap-6">
+                <FeaturedSkeleton />
+                <FeaturedSkeleton />
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {featuredArticles[0] && (
+                <FeaturedArticle article={featuredArticles[0]} size="large" />
+              )}
+              <div className="grid gap-6">
+                {featuredArticles.slice(1, 3).map((article) => (
+                  <FeaturedArticle key={article.id} article={article} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Link
+            to="/articles"
+            data-testid="view-all-featured-mobile"
+            className="md:hidden flex items-center justify-center gap-2 text-[#1A2B4C] hover:text-[#C5A059] font-medium transition-colors mt-8"
+          >
+            Ver todos los artículos
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section
+        data-testid="categories-section"
+        className="py-16 md:py-24 bg-[#F2EFE9]"
+      >
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="text-center mb-12">
+            <p className="text-[#C5A059] font-medium tracking-widest uppercase mb-2">
+              Explora por tema
+            </p>
+            <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-semibold text-[#1A1A1A]">
+              Nuestras Categorías
+            </h2>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <CategorySkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {categories.map((category) => (
+                <CategoryCard key={category.id} category={category} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Latest Articles Section */}
+      <section data-testid="latest-articles-section" className="py-16 md:py-24">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <p className="text-[#C5A059] font-medium tracking-widest uppercase mb-2">
+                Recién publicados
+              </p>
+              <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-semibold text-[#1A1A1A]">
+                Últimos Artículos
+              </h2>
+            </div>
+            <Link
+              to="/articles"
+              data-testid="view-all-latest"
+              className="hidden md:flex items-center gap-2 text-[#1A2B4C] hover:text-[#C5A059] font-medium transition-colors"
+            >
+              Ver todo
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(6)].map((_, i) => (
+                <ArticleCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {articles.slice(0, 6).map((article, index) => (
+                <ArticleCard key={article.id} article={article} index={index} />
+              ))}
+            </div>
+          )}
+
+          <Link
+            to="/articles"
+            data-testid="view-all-latest-mobile"
+            className="md:hidden flex items-center justify-center gap-2 text-[#1A2B4C] hover:text-[#C5A059] font-medium transition-colors mt-8"
+          >
+            Ver todos los artículos
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section data-testid="newsletter-section-home" className="py-16 md:py-24">
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+          <NewsletterForm />
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section
+        data-testid="cta-section"
+        className="py-16 md:py-24 bg-[#1A2B4C] relative overflow-hidden"
+      >
+        <div className="absolute inset-0 opacity-10">
+          <img
+            src="https://images.unsplash.com/photo-1471623432079-b009d30b6729?w=1920&q=80"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="font-['Playfair_Display'] text-3xl md:text-4xl font-semibold text-white mb-4">
+              ¿Listo para explorar París?
+            </h2>
+            <p className="text-white/80 text-lg mb-8">
+              Descubre todos nuestros artículos y prepara tu próxima aventura
+              parisina.
+            </p>
+            <Link
+              to="/articles"
+              data-testid="cta-explore-btn"
+              className="inline-flex items-center gap-2 bg-[#C5A059] hover:bg-[#D4AF69] text-white rounded-full px-8 py-4 font-medium transition-colors"
+            >
+              Comenzar la exploración
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  );
+}
