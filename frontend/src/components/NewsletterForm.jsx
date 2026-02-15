@@ -4,7 +4,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import axios from "axios";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API_BASE =
+  import.meta.env.VITE_BACKEND_URL ||
+  "https://paris-boheme-api.onrender.com";
+
+const API = `${API_BASE}/api`;
+
 
 export const NewsletterForm = ({ variant = "default" }) => {
   const [email, setEmail] = useState("");

@@ -14,7 +14,8 @@ import {
 } from "@/components/LoadingSkeleton";
 import { NewsletterForm } from "@/components/NewsletterForm";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://paris-boheme-api.onrender.com";
+const API = `${API_BASE}/api`;
 
 export default function HomePage() {
   const [featuredArticles, setFeaturedArticles] = useState([]);

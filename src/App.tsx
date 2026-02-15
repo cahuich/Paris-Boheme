@@ -1,5 +1,5 @@
 import React from "react";
-import "@/App.css";
+import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import HomePage from "@/pages/HomePage";

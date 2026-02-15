@@ -15,7 +15,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ArticleCard } from "@/components/ArticleCard";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://paris-boheme-api.onrender.com";
+const API = `${API_BASE}/api`;
 
 const categoryColors = {
   monumentos: {

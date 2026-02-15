@@ -8,7 +8,8 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleCardSkeleton } from "@/components/LoadingSkeleton";
 import { Input } from "@/components/ui/input";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://paris-boheme-api.onrender.com";
+const API = `${API_BASE}/api`;
 
 const CATEGORIES = [
   { slug: "all", name: "Todos los artículos" },
