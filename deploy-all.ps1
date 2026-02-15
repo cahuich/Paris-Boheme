@@ -4,7 +4,7 @@
 
 # Configuración
 $FRONTEND_DIR = "C:\Users\Casa\Paris-Boheme\frontend"
-$BACKEND_DIR = "C:\Users\Casa\Paris-Boheme\paris-boheme-api"
+$BACKEND_DIR = "C:\Users\Casa\paris-boheme-api"
 $FRONTEND_URL = "https://paris-boheme.vercel.app"  # URL del frontend
 $BACKEND_URL = "https://tu-backend.onrender.com"    # URL del backend
 
@@ -14,10 +14,16 @@ $BACKEND_URL = "https://tu-backend.onrender.com"    # URL del backend
 
 Write-Host "`n=== Backend: actualizar CORS ==="
 
-# Archivo donde se define la variable CORS (ej: cors.ts o index.ts)
+# Ruta del archivo CORS
 $CORS_FILE = Join-Path $BACKEND_DIR "src/config/cors.ts"
 
-# Reescribir la URL del frontend en CORS
+# Crear carpeta si no existe
+$CORS_FOLDER = Split-Path $CORS_FILE
+if (-not (Test-Path $CORS_FOLDER)) {
+    New-Item -ItemType Directory -Path $CORS_FOLDER -Force
+}
+
+# Escribir la URL del frontend
 $CORS_CONTENT = @"
 export const FRONTEND_URL = '$FRONTEND_URL';
 "@
