@@ -22,7 +22,11 @@
         Learn how to configure a non-root public URL by running `npm run build`.
         -->
         <title>Emergent | Fullstack App</title>
+<<<<<<< HEAD
         <script src="./Emergent _ Fullstack App_files/emergent-main.js.download"></script>
+=======
+        <script src="assets/js/emergent-main.js"></script>
+>>>>>>> 47b2d04d33da129d0df16aa26fdf21f15bf4c15e
         <!--
         These two scripts have been added for the Visual Edits, please do not edit or remove them
         -->
@@ -30,11 +34,7 @@
             // Only load visual edit scripts when inside an iframe
             if (window.self !== window.top) {
                 // Load debug monitor script
-                var debugMonitorScript = document.createElement('script');
-                debugMonitorScript.src = 'https://assets.emergent.sh/scripts/debug-monitor.js';
-                document.head.appendChild(debugMonitorScript);
-
-                // Configure Tailwind
+                                // Configure Tailwind
                 window.tailwind = window.tailwind || {};
                 tailwind.config = {
                     corePlugins: { preflight: false },

@@ -1,0 +1,4 @@
+<link rel="icon" href="./assets/images/favicon.ico" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Sitio web basado en Emergent, reconstruido con React + Vite">
