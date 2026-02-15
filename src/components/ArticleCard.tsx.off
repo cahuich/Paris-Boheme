@@ -1,0 +1,15 @@
+import React from "react";
+
+interface ArticleCardProps {
+  title: string;
+  slug: string;
+}
+
+export default function ArticleCard({ title, slug }: ArticleCardProps) {
+  return (
+    <div className="border p-4 rounded">
+      <h2>{title}</h2>
+      <a href={`/article/${slug}`}>Leer más</a>
+    </div>
+  );
+}

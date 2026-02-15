@@ -1,0 +1,9 @@
+import React from "react";
+
+export function ArticleCardSkeleton() {
+  return <div>Loading Article...</div>;
+}
+
+export function FeaturedSkeleton() {
+  return <div>Loading Featured...</div>;
+}
