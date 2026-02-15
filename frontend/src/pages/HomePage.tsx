@@ -12,6 +12,48 @@ import {
   FeaturedSkeleton,
   CategorySkeleton,
 } from "@/components/LoadingSkeleton";
+import React, { useEffect, useState } from "react";
+import { API } from "../lib/api";
+
+interface Article {
+  id: number;
+  title: string;
+  summary: string;
+}
+
+export default function HomePage() {
+  const [featured, setFeatured] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      try {
+        const res = await API.get("/featured-articles");
+        setFeatured(res.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeatured();
+  }, []);
+
+  if (loading) return <p>Cargando...</p>;
+
+  return (
+    <div className="min-h-screen bg-[#FDFBF7] p-4">
+      <h1 className="text-2xl font-bold mb-4">Artículos Destacados</h1>
+      <ul>
+        {featured.map((article) => (
+          <li key={article.id} className="mb-2">
+            <strong>{article.title}</strong>: {article.summary}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 import { NewsletterForm } from "@/components/NewsletterForm";
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://paris-boheme-api.onrender.com";
